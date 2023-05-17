@@ -1,0 +1,11 @@
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake-build-debug/
+Makefile
+
+# Other trash files
+.svn
+.DS_Store
+*.swp
+.idea
