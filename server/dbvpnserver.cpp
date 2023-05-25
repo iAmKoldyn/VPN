@@ -118,7 +118,9 @@ void VpnServer::epoll_add(int fd, int status)
 
     assert(err_ != -1);
 }
-
+/*
+Функция get_ip_pack() пытается извлечь IP-пакет из предоставленного буфера и возвращает true в случае успеха.
+*/
 bool VpnServer::get_ip_pack(const uint8_t *buf, int n, IP &pack)
 {
    try
@@ -131,6 +133,9 @@ bool VpnServer::get_ip_pack(const uint8_t *buf, int n, IP &pack)
    }
    return true;
 }
+/*
+Функция start() является основным циклом обработки событий VPN-сервера.
+Он ожидает событий с помощью epoll_wait() и обрабатывает входящие и исходящие данные между устройством tun и сокетом.*/
 void VpnServer::start()
 {
     std::cout << "The " << get_tun_name() << " is running." << std::endl;
@@ -173,7 +178,9 @@ void VpnServer::start()
         }
     }
 }
-
+/*
+Функция mod_port() изменяет порт источника или назначения пакета TCP или UDP.
+*/
 void VpnServer::mod_port(Tins::IP &pack, uint16_t value, int type)
 {
     if(pack.protocol() == IPPROTO_TCP && type == MOD_DST)
@@ -198,6 +205,9 @@ void VpnServer::mod_port(Tins::IP &pack, uint16_t value, int type)
     }
 
 }
+/*
+Функция get_quintet() извлекает IP-адрес источника, порт источника, IP-адрес назначения, порт назначения и протокол из IP-пакета.
+*/
 void VpnServer::get_quintet(const Tins::IP &IpPack, Quintet &quintet)
 {
     quintet.dstIP = IpPack.dst_addr(), quintet.srcIp = IpPack.src_addr();
@@ -219,6 +229,9 @@ void VpnServer::get_quintet(const Tins::IP &IpPack, Quintet &quintet)
         return ;
     }
 }
+/*
+Функция write_tun() записывает сериализованный PDU на устройство tun.
+*/
 void VpnServer::write_tun(Tins::PDU &ip)
 {
     char buf[BUFF_SIZE];
@@ -230,7 +243,10 @@ void VpnServer::write_tun(Tins::PDU &ip)
 
     write(tunFd_, buf, serV.size());
 }
-
+/*
+Функция send_to_net() обрабатывает исходящие пакеты от устройства tun в сеть.
+При необходимости он изменяет порт источника и отправляет пакет соответствующему получателю.
+*/
 void VpnServer::send_to_net(const Tins::IP &IpPack, const struct sockaddr_in &clientAddr)
 {
     time_t nowTime = time(nullptr);
@@ -277,7 +293,9 @@ void VpnServer::send_to_net(const Tins::IP &IpPack, const struct sockaddr_in &cl
     oneIpPack.src_addr(tunIp_);
     write_tun(oneIpPack);
 }
-
+/*
+Функция send_to_client() обрабатывает входящие пакеты из сети на устройство tun.
+*/
 void VpnServer::send_to_client(const Tins::IP &IpPack)
 {
     char buf[BUFF_SIZE];
