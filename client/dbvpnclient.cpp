@@ -28,6 +28,10 @@ dbvpnclient.h и dbvpnclient.cpp : содержат реализацию VPN-к�
 #include <tins/tins.h>
 using namespace Tins;
 
+/*
+Конструктор TunDev(const char *vpnIp, const char *vpnPort) инициализирует объект TunDev.
+Он принимает IP-адрес VPN и порт в качестве параметров.
+*/
 TunDev::TunDev(const char *vpnIp, const char *vpnPort):
     vpnIp_(vpnIp)
 {
@@ -42,6 +46,10 @@ TunDev::TunDev(const char *vpnIp, const char *vpnPort):
 
 }
 
+/*
+Функция create_tun() создает виртуальное сетевое устройство, используя интерфейс /dev/net/tun.
+Он открывает файл устройства, устанавливает флаги интерфейса и настраивает интерфейс с помощью ifconfig.
+*/
 void TunDev::create_tun()
 {
     struct ifreq ifr;
@@ -66,6 +74,10 @@ void TunDev::create_tun()
     system("route add default dev tun0");
  }
 
+/*
+Функция create_sock(const char *port) создает сокет для обмена данными.
+Он настраивает UDP-сокет и привязывает его к указанному VPN-адресу и порту.
+*/
 void TunDev::create_sock(const char *port)
 {
     int sockfd = -1;
@@ -91,6 +103,9 @@ void TunDev::create_sock(const char *port)
     sockFd_ = sockfd;
 }
 
+/*
+Функция create_epoll() создает экземпляр epoll и добавляет к нему дескриптор сокета и файла tun.
+*/
 void TunDev::create_epoll()
 {
     epFd_ = epoll_create1(0);
@@ -102,7 +117,9 @@ void TunDev::create_epoll()
 
 }
 
-
+/*
+Функция epoll_add(int fd, int status) добавляет файловый дескриптор к экземпляру epoll с указанным статусом.
+*/
 void TunDev::epoll_add(int fd, int status)
 {
     struct epoll_event ev;
@@ -112,6 +129,11 @@ void TunDev::epoll_add(int fd, int status)
 
     assert(err_ != -1);
 }
+
+/*
+Функция start() является основным циклом обработки событий VPN-клиента. 
+Он ожидает событий с помощью epoll_wait() и обрабатывает входящие и исходящие данные между устройством tun и сокетом.
+*/
 void TunDev::start()
 {
     uint8_t buf[BUFF_SIZE];
