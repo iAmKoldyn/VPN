@@ -1,3 +1,11 @@
+/*
+dbvpnclient.h и dbvpnclient.cpp : содержат реализацию VPN-клиента.
+Класс TunDev определен здесь. В нем есть методы для создания устройства TUN (create_tun),
+создания сокета (create_sock) и создания экземпляра epoll (create_epoll).
+Метод start - это то, где выполняется основной цикл клиента.
+Он ожидает событий на устройстве TUN и сокете и пересылает пакеты между ними.
+*/
+
 #ifndef DBVPN_DBVPNCLIENT_H
 #define DBVPN_DBVPNCLIENT_H
 #define IP_SIZE 128
