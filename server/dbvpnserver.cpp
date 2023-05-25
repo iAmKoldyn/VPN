@@ -31,7 +31,6 @@
 
 using namespace Tins;
 
-// Конструктор
 VpnServer::VpnServer(const char *tunIp, const char *vpnPort, std::pair<int, int> portRange, const char *tunAddress, const char *ifName):
         sender_(ifName), tunIp_(tunIp), portRange_(portRange)
 {
