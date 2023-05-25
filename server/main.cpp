@@ -67,6 +67,9 @@ main.cpp (client and server): точка входа.
 //    return 0;
 //}
 
+/*
+Функция usage() печатает инструкции по использованию.
+*/
 void usage()
 {
     std::cerr << "Usage:\n\t<tun_local_ip> (for example: 10.10.10.10)\n"
@@ -75,6 +78,9 @@ void usage()
     exit(0);
 }
 
+/*
+Функция increase_fd_limit() увеличивает ограничение файлового дескриптора.
+*/
 void increase_fd_limit()
 {
     struct rlimit rl;
@@ -92,6 +98,9 @@ void increase_fd_limit()
     }
 }
 
+/*
+Функция main() анализирует аргументы командной строки, создает объект VpnServer и запускает сервер в отдельном потоке.
+*/
 int main(int argc, char **argv)
 {
     if (argc != 6)
